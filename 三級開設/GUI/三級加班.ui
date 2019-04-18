@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>396</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>三級專案加班統計表:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="filename_btn">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>80</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>瀏覽</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="start_btn">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>300</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>開始</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="filename">
+    <property name="geometry">
+     <rect>
+      <x>179</x>
+      <y>71</y>
+      <width>491</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="filesht_cb">
+    <property name="geometry">
+     <rect>
+      <x>223</x>
+      <y>130</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>130</y>
+      <width>79</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>統計表分頁:</string>
+    </property>
+   </widget>
+   <widget class="QSplitter" name="splitter">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>180</y>
+      <width>220</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>西元</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="year_box"/>
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>年</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="month_box"/>
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>月</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QSplitter" name="splitter_2">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>240</y>
+      <width>301</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>WebITR 差勤系統帳號:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="account">
+     <property name="echoMode">
+      <enum>QLineEdit::Normal</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QSplitter" name="splitter_3">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>290</y>
+      <width>301</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>WebITR 差勤系統密碼:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="password">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>start_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>start_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>703</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>631</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>filename_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>filename_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>726</x>
+     <y>125</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>727</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>year_box</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>year_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>215</x>
+     <y>215</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>215</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>month_box</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>month_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>220</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>206</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>filesht_cb</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>filesht_cb_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>453</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>start_click()</slot>
+  <slot>filename_click()</slot>
+  <slot>year_click()</slot>
+  <slot>month_click()</slot>
+  <slot>filesht_cb_click()</slot>
+ </slots>
+</ui>
