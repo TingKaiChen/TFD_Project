@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>552</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="start_btn">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>460</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>開始</string>
+    </property>
+   </widget>
+   <widget class="QSplitter" name="splitter_2">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>30</y>
+      <width>301</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>WebITR 差勤系統帳號:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="account">
+     <property name="echoMode">
+      <enum>QLineEdit::Normal</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QSplitter" name="splitter_3">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>80</y>
+      <width>301</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>WebITR 差勤系統密碼:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="password">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QCalendarWidget" name="start_dt_cal">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>210</y>
+      <width>301</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="gridVisible">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QCalendarWidget" name="end_dt_cal">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>210</y>
+      <width>301</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="gridVisible">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>文件輸出標籤:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>180</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>開始日期:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>180</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>結束日期:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="start_dt_label">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>180</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="end_dt_label">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>180</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="year_box">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>80</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>116</x>
+      <y>80</y>
+      <width>16</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>年</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="month_box">
+    <property name="geometry">
+     <rect>
+      <x>137</x>
+      <y>80</y>
+      <width>80</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>223</x>
+      <y>80</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>月救指調假資訊.txt</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>start_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>start_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>713</x>
+     <y>512</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>631</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>year_box</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>year_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>215</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>month_box</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>month_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>303</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>206</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>start_dt_cal</sender>
+   <signal>selectionChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>start_dt()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
+     <y>384</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>499</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>end_dt_cal</sender>
+   <signal>selectionChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>end_dt()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>474</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>465</x>
+     <y>494</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>start_click()</slot>
+  <slot>filename_click()</slot>
+  <slot>year_click()</slot>
+  <slot>month_click()</slot>
+  <slot>filesht_cb_click()</slot>
+  <slot>start_dt()</slot>
+  <slot>end_dt()</slot>
+ </slots>
+</ui>
