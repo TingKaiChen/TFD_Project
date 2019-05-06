@@ -28,9 +28,8 @@ import configparser as cfgparser
 
 # In[2]:
 
-
 cfg = cfgparser.ConfigParser()
-cfg.read('config.ini')
+cfg.read('C:\\Users\\TFD\\主管差假搜尋\\config.ini')
 account = cfg.get('DEFAULT', 'account', fallback = '')
 password = cfg.get('DEFAULT', 'password', fallback = '')
 
