@@ -23,77 +23,6 @@ from module.SearchName import SearchNameObj
 # In[2]:
 
 
-# class SearchNameObj():
-#     '''
-#     Return the ID of the selected name and unit
-#     '''
-#     def __init__(self, filename = None, sheet_name = None):
-#         self.fn = filename
-#         self.sn = sheet_name
-#         self.search_name = None
-#         self.unit = None
-#     def setFileName(self, filename):
-#         self.fn = filename
-#     def setSheetName(self, sheetname):
-#         self.sn = sheetname
-#     def execute(self):
-#         self.app = xw.App(add_book = False, visible = False)
-#         self.app.display_alerts = False
-#         self.app.books.api.Open(self.fn, UpdateLinks=False)
-#         self.wb = self.app.books[-1]
-#         self.sht = self.wb.sheets[self.sn]
-#         self.rng = self.sht.range('A1').current_region
-#         self.cidx_name = self.rng.rows[0].value.index('姓名 ')
-#         self.cidx_unit = self.rng.rows[0].value.index('實際服務單位')
-#         self.cidx_id = self.rng.rows[0].value.index('身分證號')
-#         self.search_rng = self.rng.columns[self.cidx_name]
-#     def correctName(self, correctfn, correctsht):
-#         self.app.books.api.Open(correctfn, UpdateLinks=False)
-#         wb_name = self.app.books[-1]
-#         sht_name = wb_name.sheets[correctsht]
-#         rng_name = sht_name.range('A1').current_region
-#         for i in range(1, rng_name.shape[0]):
-#             wrong_name = rng_name[i, 0].value
-#             right_name = rng_name[i, 1].value
-#             replace_cell = self.rng.api.Find(wrong_name)
-#             if replace_cell != None:
-#                 replace_cell.value = right_name
-#         self.wb.save()
-#         wb_name.save()
-#         wb_name.close()
-#     def findID(self, search_name, unit):
-#         search_fml = '=COUNTIF(' + self.search_rng.address + ', "' + search_name + '")'
-#         rep_cell = self.sht.range((1, len(self.rng.columns) + 1))
-#         rep_cell.formula = search_fml
-#         rep_num = int(rep_cell.value)
-#         # Find the correct ID of the name
-#         name_cell = self.search_rng.api.Find(search_name)
-#         if name_cell == None:
-#             rep_cell.clear()
-#             return None
-#         unit_cell = self.rng[name_cell.row - 1, self.cidx_unit]
-#         for i in range(1, rep_num):
-#             # Danger: use '==' instead
-#             if unit not in unit_cell.value:
-#                 name_cell = self.search_rng.api.FindNext(name_cell)
-#                 unit_cell = self.rng[name_cell.row - 1, self.cidx_unit]
-#             else:
-#                 break
-#         rep_cell.clear()
-#         return self.rng[name_cell.row - 1, self.cidx_id].value
-#     def quit(self):
-#         self.wb.save()
-#         self.wb.close()
-#         for wb in self.app.books:
-#             wb.save()
-#             wb.close()
-#         self.app.quit()
-#         self.app.kill()
-
-
-# In[3]:
-
-
 # Read in the unit list
 unitlist = {}
 unit_table = pd.read_excel('單位名稱轉換表.xlsx')
@@ -101,7 +30,7 @@ for index, row in unit_table.iterrows():
     unitlist[row[0]] = row[1] 
 
 
-# In[4]:
+# In[3]:
 
 
 # Open GUI to select/read filenames
@@ -115,6 +44,7 @@ app.exec_()
 (dir_path, pm_file, pm_shtname, personinfo_file, personinfo_sht, 
      namecorrection_file, namecorrection_sht) = ui.getParam()
 if not (dir_path and pm_file and pm_shtname and personinfo_file and         personinfo_sht and namecorrection_file and namecorrection_sht):
+    ui.clear()
     sys.exit()
 
 pm_path = os.path.split(pm_file)[0] + '/'
@@ -129,7 +59,7 @@ SNO.execute()
 SNO.correctName(namecorrection_file, namecorrection_sht)
 
 
-# In[5]:
+# In[4]:
 
 
 # Supress "update linked data source" warnings
@@ -137,7 +67,7 @@ xlapp = xw.App(add_book = False, visible = False)
 xlapp.display_alerts = False
 
 
-# In[6]:
+# In[5]:
 
 
 # Find the range and column indices of the payment file
@@ -165,7 +95,7 @@ wb_pm.save()
 wb_pm.close()
 
 
-# In[7]:
+# In[6]:
 
 
 error_lists = {}
@@ -433,12 +363,23 @@ for filename in os.listdir(dir_path):
                     error_list.append(err_str)
 
             error_lists[unit_name] = error_list
-            wb.save()
-            wb.close()
             # Rename the file if no error exists
             if not error_list:
+                # Copy & paste the value to fix it from the formula
+                for _ridx in range(ridx_start, ridx_end):
+                    for _cidx in [cidx_1 + 1, cidx_2 + 1, cidx_3 + 1]:
+                        rng2[_ridx, _cidx].value = rng2[_ridx, _cidx].value
+                # Remove the id column
+                rng2[:, cidx_id].api.Delete()
+                # Close and rename the file
+                wb.save()
+                wb.close()
                 os.rename(dir_path + filename, 
-                          dir_path + filename.replace('.', '_OK.'))
+                          dir_path + filename.replace('.x', '_OK.x'))
+            else:
+                wb.save()
+                wb.close()
+            
         except KeyboardInterrupt:
             break
         except Exception as e:
@@ -450,7 +391,7 @@ for filename in os.listdir(dir_path):
 print('\n')
 
 
-# In[8]:
+# In[7]:
 
 
 ## Create a summary file when all files are correctly done
@@ -505,7 +446,7 @@ else:
     print('請手動核對/更正錯誤資訊')
 
 
-# In[9]:
+# In[8]:
 
 
 for wb in xlapp.books:
