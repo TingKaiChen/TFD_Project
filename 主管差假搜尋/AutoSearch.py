@@ -28,6 +28,7 @@ import configparser as cfgparser
 
 # In[2]:
 
+
 cfg = cfgparser.ConfigParser()
 cfg.read('C:\\Users\\TFD\\主管差假搜尋\\config.ini')
 account = cfg.get('DEFAULT', 'account', fallback = '')
@@ -58,7 +59,7 @@ class MyDocument():
     def __init__(self, doc_name):
         self.doc = Document(doc_name)
         
-        regex = '(\w+)\t(\w+) (\w+-\w+-\w+)\(\w+\) (\w+:\w+) ~ (\w+-\w+-\w+)\(\w+\) (\w+:\w+)\n\t事由: (\w+)'
+        regex = '(\w+)\t(\w+) (\w+-\w+-\w+)\(\w+\) (\w+:\w+) ~ (\w+-\w+-\w+)\(\w+\) (\w+:\w+)\n\t事由: (.+)'
         self.re_comp = re.compile(regex)
         
         # The time limit of the leave period
@@ -620,7 +621,6 @@ if noupdate:
 else:
     print("主管差假已更新於\""+filename+filetag+"\"")
 browser.quit()
-input("\n按任意鍵結束")
 
 
 # In[19]:
@@ -637,7 +637,7 @@ else:
 wordfilename = file_dir + today_str + '主管差假' + word_tag + '.docx'
 if (not os.path.isfile(wordfilename)) or    (os.path.isfile(wordfilename) and not noupdate):
     # Generate Word file
-    doc = MyDocument('template.docx')
+    doc = MyDocument('C:\\Users\\TFD\\主管差假搜尋\\template.docx')
     doc.setTitleDate(dt.date.today())
     for raw_string in leavelist_1:
         doc.addLeave(raw_string)
@@ -649,11 +649,5 @@ if (not os.path.isfile(wordfilename)) or    (os.path.isfile(wordfilename) and no
 # In[20]:
 
 
-# print("===已批核===")
-# for leave in leavelist_1:
-#     print(leave)
-
-# print("=======未批核========")
-# for leave in leavelist_2:
-#     print(leave)
+input("\n按任意鍵結束")
 
