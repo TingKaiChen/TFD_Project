@@ -67,12 +67,19 @@ Red_t = 2
 
 # Unit list
 OfficeList = {"資通作業科": "資通作業科", 
+              "資通科": "資通作業科",
               "減災規劃科": "減災規劃科", 
+              "減災科": "減災規劃科",
               "整備應變科": "整備應變科", 
+              "應變科": "整備應變科",
               "災害搶救科": "災害搶救科", 
+              "搶救科": "災害搶救科",
               "火災調查科": "火災調查科", 
+              "火調科": "火災調查科", 
               "綜合企劃科": "綜合企劃科", 
+              "綜企科": "綜合企劃科",
               "緊急救護科": "緊急救護科", 
+              "救護科": "緊急救護科",
               "督察室": "督察室", 
               "主任秘書室": "主任秘書室", 
               "秘書室": "秘書室", 
@@ -82,6 +89,7 @@ OfficeList = {"資通作業科": "資通作業科",
               "訓練中心": "訓練中心", 
               "救指中心": "救災救護指揮中心", 
               "火災預防科": "火災預防科", 
+              "火預科": "火災預防科",
               "局長室": "局長室", 
               "第一副局長室": "第一副局長室", 
               "第二副局長室": "第二副局長室",
@@ -358,7 +366,7 @@ for depart in departlist:
     addmembtn.click()
 
 
-# In[15]:
+# In[63]:
 
 
 # Construct a name-to-personalID dictionary
@@ -371,15 +379,19 @@ admin_login_btn.click()
 pop_window = browser.window_handles[1]
 browser.switch_to.window(pop_window)
 NameIdList = {}
-for name_set in list(namelist.values()):
-    for name in name_set:
+for unit in namelist:
+    for name in namelist[unit]:
         element = wait.until(EC.visibility_of_element_located((By.NAME, "searchName")))
         name_input = browser.find_element_by_name('searchName')
         browser.execute_script("arguments[0].scrollIntoView(false);", name_input)
         name_input.send_keys(name)
         name_input.send_keys(Keys.RETURN)
-        name_id = browser.find_element_by_id('loginId_0').get_attribute('value')
-        NameIdList[name] = name_id
+        tb = browser.find_elements_by_css_selector('body > div > form > table > tbody')[0]
+        trs = tb.find_elements_by_tag_name('tr')
+        for i in range(1, len(trs)):
+            tr = trs[i]
+            if unit in tr.text:
+                NameIdList[name] = tr.find_element_by_tag_name('input')                                     .get_attribute('value')
 browser.close()
 browser.switch_to.window(main_window)
 
@@ -488,14 +500,14 @@ for i in range(2):
         
 
 
-# In[20]:
+# In[19]:
 
 
 browser.quit()
 workbook.save()
 
 
-# In[19]:
+# In[20]:
 
 
 # Check the number of error items
