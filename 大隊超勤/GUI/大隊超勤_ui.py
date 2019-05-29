@@ -78,7 +78,7 @@ class Ui_MainWindow(QWidget):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "大隊超勤"))
         self.label.setText(_translate("MainWindow", "超勤檔案夾:"))
         self.dirpath_btn.setText(_translate("MainWindow", "瀏覽"))
         self.start_btn.setText(_translate("MainWindow", "開始"))
