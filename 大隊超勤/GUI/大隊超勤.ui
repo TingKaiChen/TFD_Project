@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>496</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>79</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>超勤檔案夾:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="dirpath_btn">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>80</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>瀏覽</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="pmfile_cb">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>210</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="namecorrection_cb">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>330</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="start_btn">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>410</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>開始</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>220</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>薪資表分頁:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>340</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>姓名更正表分頁:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="namecorrection_btn">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>280</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>瀏覽</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>18</x>
+      <y>280</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>姓名更正表:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pmfile_btn">
+    <property name="geometry">
+     <rect>
+      <x>687</x>
+      <y>156</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>瀏覽</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>160</y>
+      <width>49</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>薪資表:</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="dirpath">
+    <property name="geometry">
+     <rect>
+      <x>117</x>
+      <y>71</y>
+      <width>553</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="namecorrection">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>270</y>
+      <width>551</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="pmfile">
+    <property name="geometry">
+     <rect>
+      <x>119</x>
+      <y>151</y>
+      <width>551</width>
+      <height>39</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>dirpath_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>dirpath_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>721</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>718</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pmfile_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pmfile_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>727</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>709</x>
+     <y>153</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pmfile_cb</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pmfile_cb_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>445</x>
+     <y>251</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>496</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>namecorrection_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>namecorrection_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>731</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>724</x>
+     <y>370</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>namecorrection_cb</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>namecorrection_cb_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>417</x>
+     <y>473</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>509</x>
+     <y>472</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>start_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>start_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>703</x>
+     <y>553</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>631</x>
+     <y>552</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>dirpath_click()</slot>
+  <slot>pmfile_click()</slot>
+  <slot>pmfile_cb_click()</slot>
+  <slot>personinfo_click()</slot>
+  <slot>personinfo_cb_click()</slot>
+  <slot>namecorrection_click()</slot>
+  <slot>namecorrection_cb_click()</slot>
+  <slot>start_click()</slot>
+ </slots>
+</ui>

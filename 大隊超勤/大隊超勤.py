@@ -12,6 +12,7 @@ import pandas as pd
 import xlwings as xw
 from xlwings.constants import AutoFillType
 import numpy as np
+from numpy import linalg as LA
 import shutil
 
 from GUI.大隊超勤_app import *
@@ -41,9 +42,10 @@ ui.setupUi(MainWindow)
 MainWindow.show()
 app.exec_()
 
-(dir_path, pm_file, pm_shtname, personinfo_file, personinfo_sht, 
-     namecorrection_file, namecorrection_sht) = ui.getParam()
-if not (dir_path and pm_file and pm_shtname and personinfo_file and         personinfo_sht and namecorrection_file and namecorrection_sht):
+(dir_path, pm_file, pm_shtname, namecorrection_file, 
+     namecorrection_sht) = ui.getParam()
+if not (dir_path and pm_file and pm_shtname and namecorrection_file and 
+        namecorrection_sht):
     ui.clear()
     sys.exit()
 
@@ -54,12 +56,8 @@ error_lists = {}
 real_sums = {}
 take_sums = {}
 
-SNO = SearchNameObj(personinfo_file, personinfo_sht)
-SNO.execute()
-SNO.correctName(namecorrection_file, namecorrection_sht)
 
-
-# In[4]:
+# In[ ]:
 
 
 # Supress "update linked data source" warnings
@@ -67,7 +65,7 @@ xlapp = xw.App(add_book = False, visible = False)
 xlapp.display_alerts = False
 
 
-# In[5]:
+# In[ ]:
 
 
 # Find the range and column indices of the payment file
@@ -78,24 +76,15 @@ else:
 if not os.path.isfile(pm_path + cp_filename):
     shutil.copy(pm_path + pm_filename, pm_path + cp_filename)
 
-xlapp.books.api.Open(pm_path + cp_filename, UpdateLinks=False)
-wb_pm = xlapp.books[-1]
-sheet_pm = wb_pm.sheets[pm_shtname]
-sheet_pm.activate()
-rng_pm = sheet_pm.range('A1').current_region
-rng_pm = sheet_pm.range('A1', (rng_pm.shape[0], 9))
-for i in range(len(rng_pm.rows)):
-    if '姓名 ' in rng_pm.rows[i].value:
-        cidx_pm1 = rng_pm.rows[i].value.index('新-本俸')
-        cidx_pm2 = rng_pm.rows[i].value.index('新-專業')
-        cidx_pm3 = rng_pm.rows[i].value.index('新-主管')
-        search_rng = rng_pm.address
-        break
-wb_pm.save()
-wb_pm.close()
+
+# In[ ]:
 
 
-# In[6]:
+SNO = SearchNameObj(pm_path + cp_filename, pm_shtname)
+SNO.correctName(namecorrection_file, namecorrection_sht)
+
+
+# In[ ]:
 
 
 error_lists = {}
@@ -231,15 +220,11 @@ for filename in os.listdir(dir_path):
                     cidx1 = rng2.rows[i].value.index('薪俸')
                     cidx2 = rng2.rows[i].value.index('專業加給')        
                     if (cidx2 - cidx1) >= 3:
-                        cidx_id = rng2.rows[i].value.index('身分證字號')
                         cidx_1 = rng2.rows[i].value.index('薪俸')
                         cidx_2 = rng2.rows[i].value.index('專業加給')
                         cidx_3 = rng2.rows[i].value.index('主管加給')
                         break
                     # Insert columns
-                    rng2[:, cidx_name + 1].api.Insert()
-                    rng2[i, cidx_name + 1].value = '身分證字號'
-                    cidx_id = cidx_name + 1
                     rng2 = sheet2.range('A1').current_region
                     rng2 = sheet2.range('A1', (rng2.shape[0], 16))
                     cidx_1 = rng2.rows[i].value.index('薪俸')
@@ -266,36 +251,30 @@ for filename in os.listdir(dir_path):
             # Fill in the ID
             rng2 = sheet2.range('A1').current_region
             rng2 = sheet2.range('A1', (rng2.shape[0], 16))
-            for i in range(ridx_start, ridx_end):
-                search_id = SNO.findID(rng2[i, cidx_name].value, unit_name)
-                if search_id:
-                    rng2[i, cidx_id].value = search_id
-
-
-            rng2 = sheet2.range('A1').current_region
-            rng2 = sheet2.range('A1', (rng2.shape[0], 16))
+            search_rng = SNO.getDefaultRangeStr()
+            cidx_pm1, cidx_pm2, cidx_pm3 = SNO.getSearchColumnIndices()
             # Formulas string
             f1_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
-                        rng2[ridx_start, cidx_id].address.replace('$', ''), 
+                        rng2[ridx_start, cidx_name].address.replace('$', ''), 
                         pm_path, 
                         cp_filename, 
                         pm_shtname, 
                         search_rng, 
-                        cidx_pm1 + 1)
+                        cidx_pm1)
             f2_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
-                        rng2[ridx_start, cidx_id].address.replace('$', ''), 
+                        rng2[ridx_start, cidx_name].address.replace('$', ''), 
                         pm_path, 
                         cp_filename, 
                         pm_shtname, 
                         search_rng, 
-                        cidx_pm2 + 1)
+                        cidx_pm2)
             f3_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
-                        rng2[ridx_start, cidx_id].address.replace('$', ''), 
+                        rng2[ridx_start, cidx_name].address.replace('$', ''), 
                         pm_path, 
                         cp_filename, 
                         pm_shtname, 
                         search_rng, 
-                        cidx_pm3 + 1)
+                        cidx_pm3)
 
             # Enter formulas into 1st row
             rng2[ridx_start, cidx_1 + 1].formula = f1_str
@@ -324,7 +303,48 @@ for filename in os.listdir(dir_path):
                 rng2[ridx_start:ridx_end, cidx_3 + 1].api, AutoFillType.xlFillDefault)
             rng2[ridx_start, cidx_3 + 2].api.AutoFill(
                 rng2[ridx_start:ridx_end, cidx_3 + 2].api, AutoFillType.xlFillDefault)
-
+            
+            # Check for duplicated names problem
+            for i in range(ridx_start, ridx_end):
+                pm1 = rng2[i, cidx_1].value
+                pm2 = rng2[i, cidx_2].value
+                pm3 = rng2[i, cidx_3].value
+                if not pm1:
+                    pm1 = 0
+                if not pm2:
+                    pm2 = 0
+                if not pm3:
+                    pm3 = 0
+                search_rng = SNO.getDupNameRangeStr(rng2[i, cidx_name].value,
+                                                    [pm1, pm2, pm3])
+                # If duplicated names exist
+                if search_rng:
+                    # Formulas string
+                    f1_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
+                                rng2[i, cidx_name].address.replace('$', ''), 
+                                pm_path, 
+                                cp_filename, 
+                                pm_shtname, 
+                                search_rng, 
+                                cidx_pm1)
+                    f2_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
+                                rng2[i, cidx_name].address.replace('$', ''), 
+                                pm_path, 
+                                cp_filename, 
+                                pm_shtname, 
+                                search_rng, 
+                                cidx_pm2)
+                    f3_str = '=VLOOKUP({},\'{}[{}]{}\'!{},{},0)'.format(
+                                rng2[i, cidx_name].address.replace('$', ''), 
+                                pm_path, 
+                                cp_filename, 
+                                pm_shtname, 
+                                search_rng, 
+                                cidx_pm3)
+                    # Enter formulas into 1st row
+                    rng2[i, cidx_1 + 1].formula = f1_str
+                    rng2[i, cidx_2 + 1].formula = f2_str
+                    rng2[i, cidx_3 + 1].formula = f3_str
 
             Yellow = (255, 255, 0)
             error_list = []
@@ -365,12 +385,10 @@ for filename in os.listdir(dir_path):
             error_lists[unit_name] = error_list
             # Rename the file if no error exists
             if not error_list:
-                # Copy & paste the value to fix it from the formula
-                for _ridx in range(ridx_start, ridx_end):
-                    for _cidx in [cidx_1 + 1, cidx_2 + 1, cidx_3 + 1]:
-                        rng2[_ridx, _cidx].value = rng2[_ridx, _cidx].value
-                # Remove the id column
-                rng2[:, cidx_id].api.Delete()
+#                 # Copy & paste the value to fix it from the formula
+#                 for _ridx in range(ridx_start, ridx_end):
+#                     for _cidx in [cidx_1 + 1, cidx_2 + 1, cidx_3 + 1]:
+#                         rng2[_ridx, _cidx].value = rng2[_ridx, _cidx].value
                 # Close and rename the file
                 wb.save()
                 wb.close()
@@ -391,7 +409,7 @@ for filename in os.listdir(dir_path):
 print('\n')
 
 
-# In[7]:
+# In[ ]:
 
 
 ## Create a summary file when all files are correctly done
@@ -446,7 +464,7 @@ else:
     print('請手動核對/更正錯誤資訊')
 
 
-# In[8]:
+# In[ ]:
 
 
 for wb in xlapp.books:

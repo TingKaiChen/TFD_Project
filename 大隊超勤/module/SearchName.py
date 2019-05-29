@@ -1,69 +1,86 @@
-import xlwings as xw
+import pandas as pd
+import numpy as np
+from numpy import linalg as LA
 
 
 class SearchNameObj():
     '''
-    Return the ID of the selected name and unit
+    Return the VLOOKUP range of the selected name
     '''
-    def __init__(self, filename = None, sheet_name = None):
+    def __init__(self, filename, sheet_name):
         self.fn = filename
         self.sn = sheet_name
         self.search_name = None
-        self.unit = None
-    def setFileName(self, filename):
-        self.fn = filename
-    def setSheetName(self, sheetname):
-        self.sn = sheetname
-    def execute(self):
-        self.app = xw.App(add_book = False, visible = False)
-        self.app.display_alerts = False
-        self.app.books.api.Open(self.fn, UpdateLinks=False)
-        self.wb = self.app.books[-1]
-        self.sht = self.wb.sheets[self.sn]
-        self.rng = self.sht.range('A1').current_region
-        self.cidx_name = self.rng.rows[0].value.index('姓名 ')
-        self.cidx_unit = self.rng.rows[0].value.index('實際服務單位')
-        self.cidx_id = self.rng.rows[0].value.index('身分證號')
-        self.search_rng = self.rng.columns[self.cidx_name]
+        self.df = pd.read_excel(self.fn, sheet_name = self.sn)
+        
+        self.sample = np.array([28265, 20385, 4350])
+    
     def correctName(self, correctfn, correctsht):
-        self.app.books.api.Open(correctfn, UpdateLinks=False)
-        wb_name = self.app.books[-1]
-        sht_name = wb_name.sheets[correctsht]
-        rng_name = sht_name.range('A1').current_region
-        for i in range(1, rng_name.shape[0]):
-            wrong_name = rng_name[i, 0].value
-            right_name = rng_name[i, 1].value
-            replace_cell = self.rng.api.Find(wrong_name)
-            if replace_cell != None:
-                replace_cell.value = right_name
-        self.wb.save()
-        wb_name.save()
-        wb_name.close()
-    def findID(self, search_name, unit):
-        search_fml = '=COUNTIF(' + self.search_rng.address + ', "' + search_name + '")'
-        rep_cell = self.sht.range((1, len(self.rng.columns) + 1))
-        rep_cell.formula = search_fml
-        rep_num = int(rep_cell.value)
-        # Find the correct ID of the name
-        name_cell = self.search_rng.api.Find(search_name)
-        if name_cell == None:
-            rep_cell.clear()
-            return None
-        unit_cell = self.rng[name_cell.row - 1, self.cidx_unit]
-        for i in range(1, rep_num):
-            # Danger: use '==' instead
-            if unit not in unit_cell.value:
-                name_cell = self.search_rng.api.FindNext(name_cell)
-                unit_cell = self.rng[name_cell.row - 1, self.cidx_unit]
-            else:
-                break
-        rep_cell.clear()
-        return self.rng[name_cell.row - 1, self.cidx_id].value
+        df_corr = pd.read_excel(correctfn, sheet_name = correctsht)
+
+        for i in df_corr.index:
+            wrongname_d = self.df[self.df['姓名 '] == df_corr.loc[i, '更正前']]
+            for wn_idx in wrongname_d.index:
+                self.df.loc[wn_idx, '姓名 '] = df_corr.loc[i, '更正後']
+        self.df.to_excel(self.fn, sheet_name = self.sn, index = False)
+    
+    def getDefaultRangeStr(self):
+        col_start = str(chr(65 + list(self.df.columns).index('姓名 ')))
+        col_end = str(chr(65 + len(self.df.columns) - 1))
+        row_start = str(2)
+        row_end = str(self.df.shape[0] + 1)
+        rng_str = '${}${}:${}${}'.format(col_start, row_start, col_end, row_end)
+        
+        return rng_str
+    
+    def getSearchColumnIndices(self):
+        cidx_name = list(self.df.columns).index('姓名 ')
+        cidx_pm1 = list(self.df.columns).index('新-本俸')
+        cidx_pm2 = list(self.df.columns).index('新-專業')
+        cidx_pm3 = list(self.df.columns).index('新-主管')
+        return (cidx_pm1 - cidx_name + 1, 
+                cidx_pm2 - cidx_name + 1, 
+                cidx_pm3 - cidx_name + 1)
+        
+    
+    def getDupNameRangeStr(self, name, payarray):
+        df_names = self.df[self.df['姓名 '] == name]
+        paynorm = np.array(payarray)/self.sample
+        if df_names.shape[0] <= 1:
+            # Duplicated names don't exist ==> no return
+            rng_str = None
+        else:
+            # Duplicated names exist ==> return the string of single line range
+            line_idx = df_names.index[0]
+            right_num = 0
+            diff = None
+            for idx in df_names.index:
+                _right_num  = 0
+                _pay_array = self.df.loc[idx, ['新-本俸', '新-專業', '新-主管']].values
+                _pay_norm = _pay_array/self.sample
+                for i in range(len(_pay_array)):
+                    if _pay_array[i] == payarray[i]:
+                        _right_num += 1
+                _diff = LA.norm(_pay_norm - paynorm)
+                
+                if _right_num > right_num:
+                    line_idx = idx
+                    right_num = _right_num
+                    diff = _diff
+                elif (_right_num == right_num) and \
+                     ((diff == None) or (_diff <= diff)):
+                    line_idx = idx
+                    right_num = _right_num
+                    diff = _diff
+                    
+            col_start = str(chr(65 + list(self.df.columns).index('姓名 ')))
+            col_end = str(chr(65 + len(self.df.columns) - 1))
+            row_start = str(line_idx + 2)
+            row_end = row_start
+            
+            rng_str = '${}${}:${}${}'.format(col_start, row_start, col_end, row_end)
+        
+        return rng_str
+    
     def quit(self):
-        self.wb.save()
-        self.wb.close()
-        for wb in self.app.books:
-            wb.save()
-            wb.close()
-        self.app.quit()
-        self.app.kill()
+        self.df.to_excel(self.fn, sheet_name = self.sn, index = False)
