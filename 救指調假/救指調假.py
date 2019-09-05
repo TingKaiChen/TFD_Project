@@ -40,7 +40,7 @@ if not (year and month and account and password and start_day and
     sys.exit()
 
 
-# In[5]:
+# In[3]:
 
 
 dir_path = r'C:\\Users\\TFD\\救指調假\\救指調假資訊\\'
@@ -49,7 +49,7 @@ errleavenum = 0
 cont_leave_name = []
 
 
-# In[6]:
+# In[4]:
 
 
 option = webdriver.ChromeOptions()
@@ -66,7 +66,7 @@ else:
 browser.get('https://webitr.gov.taipei/WebITR/')
 
 
-# In[7]:
+# In[5]:
 
 
 # Login
@@ -77,7 +77,7 @@ element_pw.send_keys(password)
 element_pw.send_keys(Keys.RETURN)
 
 
-# In[8]:
+# In[6]:
 
 
 # Click "差勤管理/請假管理/請假資料維護"
@@ -104,7 +104,7 @@ switch_to_iframe(browser)
 browser.find_element_by_link_text("[請假資料查詢、編輯]").click()
 
 
-# In[9]:
+# In[7]:
 
 
 # Select 救災救護指揮中心
@@ -114,7 +114,7 @@ select.select_by_visible_text("救災救護指揮中心")
 selAllPerson = browser.find_element_by_id('selAll').click()
 
 
-# In[10]:
+# In[8]:
 
 
 # Search start day
@@ -135,7 +135,7 @@ browser.execute_script("arguments[0].scrollIntoView(false);", querybtn)
 querybtn.click()
 
 
-# In[11]:
+# In[9]:
 
 
 leave_table = browser.find_element_by_css_selector(
@@ -144,6 +144,7 @@ leaves = leave_table.find_elements_by_class_name('stripeMe')
 for leave in leaves:
     # Select wrong data
     if '合計日時數：0.0' in leave.text:
+        leavetext = leave.text
         errleavenum += 1
         main_window = browser.window_handles[0]
         modify_btn = leave.find_element_by_id('modifyLink')
@@ -180,7 +181,10 @@ for leave in leaves:
             povdays = browser.find_element_by_id('povdays')
             browser.execute_script("arguments[0].scrollIntoView(false);", povdays)
             povdays.clear()
-            povdays.send_keys(str(float(timedelta.days)))
+            if '其他假' in leavetext:
+                povdays.send_keys(str((float(timedelta.days) + 1) / 2))
+            else:
+                povdays.send_keys(str(float(timedelta.days)))
         # Click edit button
         btns = browser.find_elements_by_tag_name('input')
         for btn in btns:
@@ -195,7 +199,7 @@ for leave in leaves:
         switch_to_iframe(browser)
 
 
-# In[12]:
+# In[7]:
 
 
 # Select 救災救護指揮中心
@@ -264,11 +268,11 @@ for i in range(mem_num):
 browser.quit()
 
 
-# In[15]:
+# In[8]:
 
 
 # Save information
-filename = str(year - 1911) + '年' + str(month) + '月救指調假資訊.txt'
+filename = str(year) + '年' + str(month) + '月救指調假資訊.txt'
 with io.open(dir_path + filename, 'w', encoding='utf8') as outfile:
     outfile.write('已修改 ' + str(errleavenum) + ' 筆錯誤假單\n')
     outfile.write('調整 ' + str(len(cont_leave_name)) + 
@@ -277,7 +281,7 @@ with io.open(dir_path + filename, 'w', encoding='utf8') as outfile:
         outfile.write(cleave_info + '\n')
 
 
-# In[16]:
+# In[9]:
 
 
 # Summation

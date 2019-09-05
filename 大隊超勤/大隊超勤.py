@@ -57,7 +57,7 @@ real_sums = {}
 take_sums = {}
 
 
-# In[ ]:
+# In[4]:
 
 
 # Supress "update linked data source" warnings
@@ -65,7 +65,7 @@ xlapp = xw.App(add_book = False, visible = False)
 xlapp.display_alerts = False
 
 
-# In[ ]:
+# In[5]:
 
 
 # Find the range and column indices of the payment file
@@ -77,14 +77,14 @@ if not os.path.isfile(pm_path + cp_filename):
     shutil.copy(pm_path + pm_filename, pm_path + cp_filename)
 
 
-# In[ ]:
+# In[6]:
 
 
 SNO = SearchNameObj(pm_path + cp_filename, pm_shtname)
 SNO.correctName(namecorrection_file, namecorrection_sht)
 
 
-# In[ ]:
+# In[7]:
 
 
 error_lists = {}
@@ -409,7 +409,7 @@ for filename in os.listdir(dir_path):
 print('\n')
 
 
-# In[ ]:
+# In[8]:
 
 
 ## Create a summary file when all files are correctly done
@@ -464,7 +464,7 @@ else:
     print('請手動核對/更正錯誤資訊')
 
 
-# In[ ]:
+# In[9]:
 
 
 for wb in xlapp.books:
