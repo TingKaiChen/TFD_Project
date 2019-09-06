@@ -544,7 +544,10 @@ for name in NameIdList.keys():
         table = browser.find_element_by_css_selector("#div2 > table")
         rows = table.find_elements_by_class_name("stripeMe")
         for row in rows:
+            invalid = False
             leavetype = row.find_elements_by_tag_name("td")[2].text
+            if leavetype == '代理轉移申請':
+                invalid = True
             # Find the reason of the leave
             main_window = browser.window_handles[0]
             leave_link = row.find_element_by_tag_name('a')
@@ -571,6 +574,10 @@ for name in NameIdList.keys():
                     sub_unit, sub_title, sub_name = re.findall(
                         '(\w+):\((\w+)\)\(\w+\)(\w+)', sub_str)[0]
                     substitute = sub_unit + sub_name[0] + sub_title                         + sub_name[1:]
+                elif '批核人' in row.text:
+                # 已修改的假單不列入計算
+                    if '(已修改)' in row.text:
+                        invalid = True
                 else:
                     continue
 
@@ -578,6 +585,8 @@ for name in NameIdList.keys():
             browser.close()
             browser.switch_to.window(main_window)
             switch_to_iframe(browser)
+            if invalid:
+                continue
             leave_str = (titlename_dict[name]+"\t"+leavetype+" "+ lv_dt +
                          '\n\t事由: ' + reason +
                          '\n\t代理人: ' + substitute)
@@ -637,7 +646,10 @@ for name in nextdaylist:
         table = browser.find_element_by_css_selector("#div2 > table")
         rows = table.find_elements_by_class_name("stripeMe")
         for row in rows:
+            invalid = False
             leavetype = row.find_elements_by_tag_name("td")[2].text
+            if leavetype == '代理轉移申請':
+                invalid = True
             # Find the reason of the leave
             main_window = browser.window_handles[0]
             leave_link = row.find_element_by_tag_name('a')
@@ -662,6 +674,10 @@ for name in nextdaylist:
                     sub_unit, sub_title, sub_name = re.findall(
                         '(\w+):\((\w+)\)\(\w+\)(\w+)', sub_str)[0]
                     substitute = sub_unit + sub_name[0] + sub_title                         + sub_name[1:]
+                elif '批核人' in row.text:
+                # 已修改的假單不列入計算
+                    if '(已修改)' in row.text:
+                        invalid = True
                 else:
                     continue
 
@@ -669,6 +685,8 @@ for name in nextdaylist:
             browser.close()
             browser.switch_to.window(main_window)
             switch_to_iframe(browser)
+            if invalid:
+                continue
             if not startFromMorning(lv_dt):
                 continue
             leave_str = (titlename_dict[name]+"\t明日"+leavetype+"請手動合併 "+ lv_dt +
