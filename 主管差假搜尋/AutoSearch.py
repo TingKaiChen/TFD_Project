@@ -59,7 +59,7 @@ def switch_to_accountframe(browser):
     browser.switch_to.frame(browser.find_element_by_css_selector("body > center > table:nth-child(1) > tbody > tr:nth-child(1) > td > table > tbody > tr > td:nth-child(2) > div > iframe"))
 
 
-# In[5]:
+# In[40]:
 
 
 class MyDocument():
@@ -201,6 +201,8 @@ class MyDocument():
             leavetype = '補休'
             
         leave_str = officername + date_str + leavetype
+        if onduty >= self.start_lmt + dt.timedelta(days = 1):
+            leave_str = officername + '明日' + date_str + leavetype + '請手動合併'
         return leave_str, reason, substitute, full_period
     
     def changeYear(self, date_str):
@@ -495,7 +497,7 @@ def startFromMorning(leave_dt):
         return False
 
 
-# In[20]:
+# In[31]:
 
 
 # 待/已批核假查詢 new
@@ -563,7 +565,7 @@ for name in NameIdList.keys():
                     lv_dt = row.find_elements_by_tag_name('td')[1].text
                     lv_dt = re.findall(
                         '(\d+-\d+-\d+\(\w+\) \d+:\d+ ~ \d+-\d+-\d+\(\w+\) \d+:\d+)', lv_dt)[0]
-                    if searchTomorrow(lv_dt):
+                    if searchTomorrow(lv_dt) and name not in nextdaylist:
                         nextdaylist.append(name)
                 elif '事由' in row.text:
                 # Leave reason
@@ -599,7 +601,13 @@ for name in NameIdList.keys():
 print("\r(2/5) 已批核/待批核假單查詢:   完成")
 
 
-# In[21]:
+# In[32]:
+
+
+nextdaylist
+
+
+# In[33]:
 
 
 # 隔日連續假查詢
@@ -699,7 +707,7 @@ for name in nextdaylist:
 print("\r(3/5) 已批核/待批核假單查詢:   完成")
 
 
-# In[22]:
+# In[34]:
 
 
 # Leave summary
@@ -787,7 +795,7 @@ browser.quit()
 print("\r(3/5) 輸出主管差假清單:   完成")
 
 
-# In[23]:
+# In[35]:
 
 
 ## Update Check
@@ -803,7 +811,7 @@ if noupdate:
         print("下午無主管差假更新")
 
 
-# In[24]:
+# In[41]:
 
 
 if noupdate:
@@ -888,7 +896,7 @@ else:
     print("主管差假已更新於\""+wordfilename1+"\"")
 
 
-# In[25]:
+# In[38]:
 
 
 if noupdate:
@@ -923,7 +931,7 @@ else:
     print("\r(5/5) 寄送代理人版本Word檔至主秘室與秘書室:   完成")
 
 
-# In[26]:
+# In[39]:
 
 
 print("\n\n===主管差假查詢完成===")
